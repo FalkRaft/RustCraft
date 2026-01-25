@@ -1,0 +1,71 @@
+cargo-features = ["codegen-backend", "profile-rustflags"]
+
+[package]
+name = "rustcraft"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = "0.18.0"
+# Use bevy_egui for an immediate-mode debug overlay. We're using the git source so you can
+# pick a compatible branch if needed; you can switch this to a crates.io version later.
+bevy_egui = "0.39.0"
+dark-light = "2.0.0"
+egui = "0.33.3"
+log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
+sysinfo = "0.38.0"
+
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+codegen-backend = "cranelift"
+rustflags = [
+    # Enable WebAssembly SIMD support for better performance on supported platforms.
+    "-Ctarget-feature=simd128",
+    # (Nightly) Make the current crate share its generic instantiations
+    "-Zshare-generics=y",
+]
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
+codegen-backend = "llvm"
+
+# Enable more optimization in the release profile at the cost of compile time.
+[profile.release]
+# Compile the entire crate as one unit.
+# Slows compile times, marginal improvements.
+codegen-units = 1
+# Do a second optimization pass over the entire program, including dependencies.
+# Slows compile times, marginal improvements.
+lto = "thin"
+codegen-backend = "llvm"
+rustflags = [
+    # Enable WebAssembly SIMD support for better performance on supported platforms.
+    "-Ctarget-feature=simd128",
+    # (Nightly) Make the current crate share its generic instantiations
+    "-Zshare-generics=y",
+]
+
+# Optimize for size in the wasm-release profile to reduce load times and bandwidth usage on web.
+[profile.wasm-release]
+# Default to release profile values.
+inherits = "release"
+# Optimize with size in mind (also try "z", sometimes it is better).
+# Slightly slows compile times, great improvements to file size and runtime performance.
+opt-level = "z"
+# Strip all debugging information from the binary to slightly reduce file size.
+strip = "debuginfo"
+rustflags = [
+    # Enable WebAssembly SIMD support for better performance on supported platforms.
+    "-Ctarget-feature=simd128",
+    # (Nightly) Make the current crate share its generic instantiations
+    "-Zshare-generics=y",
+]
+
+[toolchain]
+channel = "nightly"
+
+[unstable]
+codegen-backend = true
