@@ -24,6 +24,12 @@ jobs:
       - name: Build project
         run: cargo build --release
 
+      - name: Run tests release
+        run: cargo test --all --release
+
+      - name: Run tests debug
+        run: cargo test --all
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
