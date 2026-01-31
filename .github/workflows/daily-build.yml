@@ -22,7 +22,7 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
 
       - name: Build project
-        run: cd ./mcbe-client/rustcraft/ && cargo build --release
+        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libegl1-mesa-dev libgles2-mesa-dev libdrm-dev libgbm-dev && cd ./mcbe-client/rustcraft/ && cargo build --release
 
       - name: Run tests release
         run: cd ./mcbe-client/rustcraft/ && cargo test --all --release
