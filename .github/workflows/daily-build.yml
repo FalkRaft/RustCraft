@@ -2,8 +2,8 @@ name: Daily Multi-Platform Build
 
 on:
   schedule:
-    - cron: "0 3 * * *"   # Runs every day at 03:00 UTC
-  workflow_dispatch:       # Allows manual runs
+    - cron: "0 3 * * *"
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,20 +18,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Linux-only dependencies for wayland-sys, winit, wgpu, etc.
+      - name: Install Linux dependencies
+        if: runner.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwayland-dev \
+            libxkbcommon-dev \
+            libegl1-mesa-dev \
+            libgles2-mesa-dev \
+            libdrm-dev \
+            libgbm-dev
+
       - name: Install Rust
         uses: dtolnay/rust-toolchain@nightly
 
       - name: Build project
-        run: sudo apt-get update && sudo apt-get install -y libwayland-dev libxkbcommon-dev libegl1-mesa-dev libgles2-mesa-dev libdrm-dev libgbm-dev && cd ./mcbe-client/rustcraft/ && cargo build --release
+        working-directory: ./mcbe-client/rustcraft
+        run: cargo build --release
 
       - name: Run tests release
-        run: cd ./mcbe-client/rustcraft/ && cargo test --all --release
+        working-directory: ./mcbe-client/rustcraft
+        run: cargo test --all --release
 
       - name: Run tests debug
-        run: cd ./mcbe-client/rustcraft/ && cargo test --all
+        working-directory: ./mcbe-client/rustcraft
+        run: cargo test --all
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.os }}
-          path: target/release/
+          path: mcbe-client/rustcraft/target/release/
