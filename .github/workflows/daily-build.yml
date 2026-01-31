@@ -18,32 +18,48 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Linux-only dependencies for wayland-sys, winit, wgpu, etc.
+      # Linux-only system dependencies for Bevy (X11, Wayland, audio, udev, GPU stack)
       - name: Install Linux dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
           sudo apt-get install -y \
+            libasound2-dev \
+            libudev-dev \
+            libx11-dev \
+            libxi-dev \
+            libxcursor-dev \
+            libxrandr-dev \
+            libxinerama-dev \
+            libxxf86vm-dev \
             libwayland-dev \
             libxkbcommon-dev \
             libegl1-mesa-dev \
             libgles2-mesa-dev \
             libdrm-dev \
             libgbm-dev \
-            libasound2-dev
+            libfontconfig1-dev \
+            libfreetype6-dev
 
-      - name: Install Rust
+      - name: Install Rust (nightly)
         uses: dtolnay/rust-toolchain@nightly
+
+      # Cargo caching (huge speedup)
+      - name: Cache cargo build artifacts
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            mcbe-client/rustcraft
 
       - name: Build project
         working-directory: ./mcbe-client/rustcraft
         run: cargo build --release
 
-      - name: Run tests release
+      - name: Run tests (release)
         working-directory: ./mcbe-client/rustcraft
         run: cargo test --all --release
 
-      - name: Run tests debug
+      - name: Run tests (debug)
         working-directory: ./mcbe-client/rustcraft
         run: cargo test --all
 
