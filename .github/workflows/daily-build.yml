@@ -29,7 +29,8 @@ jobs:
             libegl1-mesa-dev \
             libgles2-mesa-dev \
             libdrm-dev \
-            libgbm-dev
+            libgbm-dev \
+            libasound2-dev
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@nightly
