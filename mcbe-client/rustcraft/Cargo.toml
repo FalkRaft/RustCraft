@@ -19,7 +19,7 @@ sysinfo = "0.38.0"
 # Enable a small amount of optimization in the dev profile.
 [profile.dev]
 opt-level = 1
-codegen-backend = "cranelift"
+codegen-backend = "llvm"
 rustflags = [
     # Enable WebAssembly SIMD support for better performance on supported platforms.
     "-Ctarget-feature=simd128",
@@ -66,6 +66,3 @@ rustflags = [
 
 [toolchain]
 channel = "nightly"
-
-[unstable]
-codegen-backend = true
