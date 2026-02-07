@@ -1,8 +1,8 @@
 use bevy::prelude::*;
-use bevy::ui::ZIndex as GlobalZIndex;
 use dark_light;
 use sysinfo::System;
-use crate::structs::{TitleBar, SysInfo, ThemeMode, SystemThemeState};
+
+use crate::data::{GlobalFlags, GlobalSettings, SysInfo, SystemThemeState, ThemeMode};
 
 pub fn setup(mut commands: Commands) {
     // spawn a simple 2D camera
@@ -15,53 +15,11 @@ pub fn setup(mut commands: Commands) {
         Ok(dark_light::Mode::Unspecified) | Err(_) => ThemeMode::Unspecified,
     };
 
-    let colour = match theme_mode {
-        ThemeMode::Dark => BackgroundColor(Color::srgba(0.2, 0.2, 0.2, 0.75)),
-        ThemeMode::Light | ThemeMode::Unspecified => {
-            BackgroundColor(Color::srgba(1.0, 1.0, 1.0, 0.75))
-        }
-    };
+    let mut global_settings = GlobalSettings::default();
+    global_settings.flags.set(GlobalFlags::IS_DARK_MODE, theme_mode == ThemeMode::Dark);
+    global_settings.flags.set(GlobalFlags::IS_MOBILE, cfg!(target_arch = "wasm32"));
+    global_settings.flags.set(GlobalFlags::DEBUG_OVERLAY, cfg!(debug_assertions));
 
-    #[cfg(target_os = "macos")]
-    let node = commands
-        .spawn((
-            Node {
-                width: Val::Percent(100.0),
-                height: Val::Px(32.0),
-                ..Default::default()
-            },
-            BackgroundColor(colour.0),
-            GlobalZIndex(i32::MAX),
-        ))
-        .id();
-
-    #[cfg(target_os = "windows")]
-    let node = commands
-        .spawn((
-            Node {
-                width: Val::Percent(100.0),
-                height: Val::Px(40.0),
-                ..Default::default()
-            },
-            BackgroundColor(colour.0),
-            GlobalZIndex(i32::MAX),
-        ))
-        .id();
-
-    #[cfg(target_os = "linux")]
-    let node = commands
-        .spawn((
-            Node {
-                width: Val::Percent(100.0),
-                height: Val::Px(40.0),
-                ..Default::default()
-            },
-            BackgroundColor(colour.0),
-            GlobalZIndex(i32::MAX),
-        ))
-        .id();
-
-    commands.insert_resource(TitleBar(node));
     commands.insert_resource(SysInfo {
         sys: System::new_all(),
     });

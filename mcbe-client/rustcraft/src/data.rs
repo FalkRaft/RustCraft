@@ -1,9 +1,52 @@
-use bevy::prelude::{Entity, Resource, Timer, TimerMode};
-use sysinfo::{System};
-use std::time::{Duration, Instant};
+use bevy::prelude::*;
+use bitflags::bitflags;
+use std::{time::{Duration, Instant}};
+use sysinfo::System;
+
+bitflags! {
+    pub struct GlobalFlags: u8 {
+        const IS_DEBUG = 1 << 0;
+        const IS_LOADING = 1 << 1;
+        const IS_SIGNED_IN = 1 << 2;
+        const IS_MOBILE = 1 << 3;
+        const DEBUG_OVERLAY = 1 << 4;
+        const IS_FIFO = 1 << 5;
+        const IS_DARK_MODE = 1 << 6;
+        const IN_GAME = 1 << 7;
+    }
+}
+
+bitflags! {
+    pub struct DebugFlags: u8 {
+        const VSYNC = 1 << 0;
+        const FPS = 1 << 1;
+        const CPU = 1 << 2;
+        const MEM = 1 << 3;
+        const VMEM = 1 << 4;
+        const DISK = 1 << 5;
+        const FILES = 1 << 6;
+        const RUNTIME = 1 << 7;
+    }
+}
 
 #[derive(Resource)]
-pub struct TitleBar(pub Entity);
+pub struct GlobalSettings {
+    pub flags: GlobalFlags,
+    pub button_width_multiplier: f32,
+    pub button_height_multiplier: f32,
+    pub dbg_flags: DebugFlags,
+}
+
+impl Default for GlobalSettings {
+    fn default() -> Self {
+        Self {
+            flags: GlobalFlags::empty(),
+            button_width_multiplier: 1.0 / 20.0,
+            button_height_multiplier: 1.0 / 30.0,
+            dbg_flags: DebugFlags::empty(),
+        }
+    }
+}
 
 #[derive(Resource)]
 pub struct SysInfo {
@@ -57,18 +100,6 @@ pub enum ThemeMode {
 #[derive(Resource, Debug)]
 pub struct SystemThemeState {
     pub mode: ThemeMode,
-}
-
-/// Whether debug UI is enabled (starts false).
-#[derive(Resource)]
-pub struct DebugState {
-    pub enabled: bool,
-}
-
-impl Default for DebugState {
-    fn default() -> Self {
-        Self { enabled: false }
-    }
 }
 
 /// FPS cap modes and resource

@@ -22,3 +22,4 @@ target
 
 mcbe-client/.DS_Store
 mcbe-client/rustcraft/target/
+.DS_Store

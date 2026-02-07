@@ -1,9 +1,9 @@
-use bevy::{prelude::{Query, Res, ResMut, Window, KeyCode}, window::{WindowMode}};
 use bevy::input::ButtonInput;
-use bevy::window::{MonitorSelection, VideoModeSelection, PresentMode};
+use bevy::window::{MonitorSelection, PresentMode, VideoModeSelection};
+use bevy::{prelude::*, window::WindowMode};
 use log::info;
 
-use crate::structs::{DebugState, FpsCap, FpsMode};
+use crate::data::{DebugFlags, FpsCap, FpsMode, GlobalFlags, GlobalSettings};
 
 /// Input handling:
 /// - F11 toggles maximize
@@ -13,8 +13,8 @@ use crate::structs::{DebugState, FpsCap, FpsMode};
 pub fn input_system(
     mut windows: Query<&mut Window>,
     keys: Res<ButtonInput<KeyCode>>,
-    mut debug: ResMut<DebugState>,
     mut cap: ResMut<FpsCap>,
+    mut global_settings: ResMut<GlobalSettings>,
 ) {
     // assume single primary window
     if let Ok(mut window) = windows.single_mut() {
@@ -27,16 +27,26 @@ pub fn input_system(
         }
 
         // toggle debug overlay with F3
-        if keys.just_pressed(KeyCode::F3) {
-            debug.enabled = !debug.enabled;
-            let enabled = debug.enabled;
-            info!(
-                "Debug overlay {}",
-                if enabled { "enabled" } else { "disabled" }
-            );
+        if keys.just_released(KeyCode::F3) {
+            global_settings.flags.toggle(GlobalFlags::DEBUG_OVERLAY);
+            info!("Debug overlay is set to {}.", global_settings.flags.contains(GlobalFlags::DEBUG_OVERLAY));
         }
 
-        if keys.just_pressed(KeyCode::Escape) {
+        if keys.all_pressed([KeyCode::F3, KeyCode::ControlLeft]) {
+            warn!(
+                "CRASH TEST: {:?} + {:?} pressed, crashing in 10 seconds...",
+                KeyCode::F3,
+                KeyCode::ControlLeft
+            );
+            std::thread::sleep(std::time::Duration::from_secs(1));
+            for i in 0..10 {
+                warn!("CRASH TEST: Crashing in {}s", 10 - i);
+                std::thread::sleep(std::time::Duration::from_secs(1));
+            }
+            std::process::abort();
+        }
+
+        if keys.all_pressed([KeyCode::ControlLeft, KeyCode::KeyQ]) {
             std::process::exit(0);
         }
 
@@ -90,9 +100,6 @@ pub fn input_system(
                 FpsMode::Manual(60),
                 FpsMode::Manual(30),
                 FpsMode::Manual(20),
-                FpsMode::Manual(15),
-                FpsMode::Manual(10),
-                FpsMode::Manual(5),
             ];
 
             let current = cap.mode;
@@ -115,6 +122,10 @@ pub fn input_system(
                     // immediate allows manual sleeping/spin to control pacing
                     window.present_mode = PresentMode::Immediate;
                 }
+            }
+
+            if global_settings.dbg_flags.contains(DebugFlags::VSYNC) {
+                cap.mode = FpsMode::VSync;
             }
 
             info!("FPS cap mode changed: {:?}", cap.mode);
