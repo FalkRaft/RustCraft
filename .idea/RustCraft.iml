@@ -22,6 +22,9 @@
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-codegen/target" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-protocol/fuzz/target" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/config" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/logs" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/plugins" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/DIM-1" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/DIM1" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/entities" />

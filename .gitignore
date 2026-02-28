@@ -27,3 +27,4 @@ mcbe-client/rustcraft/target/
 mcbe-server/Pumpkin/target/
 mcbe-server/Pumpkin/world/
 mcbe-server/Pumpkin/logs/
+mcbe-server/.DS_Store
