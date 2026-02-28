@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="EMPTY_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-client/rustcraft/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/plugins/bedrock-engine-server/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-api-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-codegen/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-config/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-data/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-data/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-inventory/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-macros/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-nbt/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-protocol/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-util/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-world/benches" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-world/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-client/rustcraft/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/plugins/bedrock-engine-server/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-codegen/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-protocol/fuzz/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/DIM-1" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/DIM1" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/entities" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/playerdata" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/poi" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/region" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
