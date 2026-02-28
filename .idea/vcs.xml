@@ -3,6 +3,5 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/mcbe-server/Pumpkin" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/mcbe-server/Pumpkin/plugins/bedrock-engine-server" vcs="Git" />
   </component>
 </project>
