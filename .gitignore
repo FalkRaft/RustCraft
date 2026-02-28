@@ -23,9 +23,9 @@ target
 mcbe-client/.DS_Store
 mcbe-client/rustcraft/target/
 mcbe-client/plugins/bedrock-engine-server/target/
-mcbe-client/plugins/*.dylib
-mcbe-client/plugins/*.so
-mcbe-client/plugins/*.dll
+mcbe-client/plugins/libbedrock_engine_server.dylib
+mcbe-client/plugins/libbedrock_engine_server.so
+mcbe-client/plugins/libbedrock_engine_server.dll
 .DS_Store
 
 mcbe-server/Pumpkin/target/
