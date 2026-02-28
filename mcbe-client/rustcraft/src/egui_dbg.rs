@@ -11,7 +11,7 @@ use crate::data::{DebugFlags, FpsCap, FpsMode, FpsState, GlobalFlags, GlobalSett
 pub fn egui_debug_system(
     mut contexts: EguiContexts,
     fps: Res<FpsState>,
-    windows: Query<&Window>,
+    mut windows: Query<&mut Window>,
     mut cap: ResMut<FpsCap>,
     time: Res<Time>,
     mut sysinfo: ResMut<SysInfo>,
@@ -35,7 +35,7 @@ pub fn egui_debug_system(
             )
             .interactable(true)
             .show(&ctx, |ui| {
-                for window in windows.iter() {
+                for mut window in &mut windows.iter_mut() {
                     let (w, h) = (
                         window.resolution.width() as u32,
                         window.resolution.height() as u32,
@@ -114,6 +114,7 @@ pub fn egui_debug_system(
 
                     if vsync {
                         cap.mode = FpsMode::VSync;
+                        window.present_mode = bevy::window::PresentMode::AutoVsync;
                     }
 
                     // FPS

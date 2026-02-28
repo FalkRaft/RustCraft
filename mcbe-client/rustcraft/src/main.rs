@@ -6,7 +6,8 @@ use bevy::{
     window::{CompositeAlphaMode, CursorOptions, ExitCondition, PresentMode},
 };
 use bevy_egui::EguiPlugin;
-use std::{f32, num::NonZero};
+use bevy_egui_kbgp::KbgpPlugin;
+use std::f32;
 
 mod data;
 mod egui_dbg;
@@ -17,13 +18,14 @@ mod ui;
 mod update;
 mod window;
 
-use crate::{data::GlobalSettings, fps::{
-    fps_counter_system, fps_title_system, frame_cap_system_improved, frame_start_system,
-}};
 use crate::input::input_system;
 use crate::setup::setup;
 use crate::update::update;
 use crate::window::BevyWindowPlugin;
+use crate::{
+    data::GlobalSettings,
+    fps::{fps_counter_system, fps_title_system, frame_cap_system_improved, frame_start_system},
+};
 use crate::{
     data::{FpsCap, FpsState, FrameStart},
     ui::GameUIPlugin,
@@ -72,11 +74,13 @@ fn main() {
             ..Default::default()
         }))
         // add egui overlay
-        .add_plugins(EguiPlugin {
-            enable_multipass_for_primary_context: false,
-            ui_render_order: bevy_egui::UiRenderOrder::EguiAboveBevyUi,
-            bindless_mode_array_size: NonZero::new(1024),
-        })
+        // .add_plugins(EguiPlugin {
+        //     enable_multipass_for_primary_context: false, // deprecated
+        //     ui_render_order: bevy_egui::UiRenderOrder::EguiAboveBevyUi,
+        //     bindless_mode_array_size: NonZero::new(1024),
+        // })
+        .add_plugins(EguiPlugin::default())
+        .add_plugins(KbgpPlugin)
         .add_plugins(BevyWindowPlugin::default())
         .add_plugins(GameUIPlugin)
         // startup

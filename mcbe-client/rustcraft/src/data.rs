@@ -1,6 +1,6 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, window::PresentMode};
 use bitflags::bitflags;
-use std::{time::{Duration, Instant}};
+use std::time::{Duration, Instant};
 use sysinfo::System;
 
 bitflags! {
@@ -35,6 +35,8 @@ pub struct GlobalSettings {
     pub button_width_multiplier: f32,
     pub button_height_multiplier: f32,
     pub dbg_flags: DebugFlags,
+    pub recent_files_opened: Vec<RecentFile>,
+    pub game_settings: GameSettings,
 }
 
 impl Default for GlobalSettings {
@@ -44,8 +46,27 @@ impl Default for GlobalSettings {
             button_width_multiplier: 1.0 / 20.0,
             button_height_multiplier: 1.0 / 30.0,
             dbg_flags: DebugFlags::empty(),
+            recent_files_opened: vec![],
+            game_settings: GameSettings {
+                render_distance: 16,
+                fps_cap: 0, // 0 means unlimited
+                present_mode: PresentMode::Fifo,
+            },
         }
     }
+}
+
+pub struct GameSettings {
+    pub render_distance: u8,
+    pub fps_cap: u8,
+    pub present_mode: PresentMode,
+}
+
+#[derive(Debug, Clone)]
+pub struct RecentFile {
+    pub path: std::path::PathBuf,
+    pub name: String,
+    pub extension: Option<String>,
 }
 
 #[derive(Resource)]

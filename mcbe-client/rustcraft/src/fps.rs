@@ -1,7 +1,7 @@
+use crate::data::{FpsCap, FpsMode, FpsState, FrameStart, GlobalFlags, GlobalSettings};
+use bevy::prelude::{Query, Res, ResMut, Time, Window};
 use std::hint::spin_loop;
 use std::time::Duration;
-use bevy::prelude::{Query, Res, ResMut, Time, Window};
-use crate::data::{FpsCap, FpsMode, FpsState, FrameStart, GlobalFlags, GlobalSettings};
 
 /// Count frames and compute FPS once per second into `FpsState`.
 pub fn fps_counter_system(time: Res<Time>, mut fps: ResMut<FpsState>) {

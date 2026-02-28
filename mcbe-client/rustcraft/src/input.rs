@@ -27,9 +27,15 @@ pub fn input_system(
         }
 
         // toggle debug overlay with F3
-        if keys.just_released(KeyCode::F3) {
+        if keys.just_released(KeyCode::F3)
+            && !keys.pressed(KeyCode::KeyT)
+            && !keys.just_pressed(KeyCode::KeyT)
+        {
             global_settings.flags.toggle(GlobalFlags::DEBUG_OVERLAY);
-            info!("Debug overlay is set to {}.", global_settings.flags.contains(GlobalFlags::DEBUG_OVERLAY));
+            info!(
+                "Debug overlay is set to {}.",
+                global_settings.flags.contains(GlobalFlags::DEBUG_OVERLAY)
+            );
         }
 
         if keys.all_pressed([KeyCode::F3, KeyCode::ControlLeft]) {

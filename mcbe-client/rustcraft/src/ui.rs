@@ -1,93 +1,103 @@
-use bevy::{
-    prelude::*,
-    window::{PrimaryWindow},
-};
-use bevy_egui::EguiContexts;
-use egui::{CornerRadius, containers::menu::MenuConfig};
+use bevy::prelude::*;
+use bevy_egui::{EguiContexts, EguiPrimaryContextPass};
+use crossbeam_channel::{Receiver, Sender};
+use egui::{CornerRadius, Id, Memory};
+use main_menu::main_menu_ui;
+use menu_bar::menu_bar_ui;
 
-use crate::data::{GlobalFlags, GlobalSettings};
+pub mod main_menu;
+pub mod menu_bar;
+
+use crate::data::{FpsCap, GlobalSettings};
 
 pub struct GameUIPlugin;
 
+#[derive(Resource)]
+pub struct FileDialogChannel {
+    pub sender: Sender<Option<std::path::PathBuf>>,
+    pub receiver: Receiver<Option<std::path::PathBuf>>,
+}
+
+#[derive(Resource, Default)]
+pub struct MenuBarVisibility {
+    pub hidden: bool,
+}
+
 impl Plugin for GameUIPlugin {
     fn build(&self, app: &mut App) {
-        app.add_systems(Update, (ui_system, crate::egui_dbg::egui_debug_system));
+        let (sender, receiver) = crossbeam_channel::unbounded();
+        app.insert_resource(FileDialogChannel { sender, receiver })
+            .insert_resource(MenuBarVisibility::default());
+        app.add_systems(Update, menu_bar::file_dialog_system);
+        app.add_systems(
+            EguiPrimaryContextPass,
+            (ui_system, crate::egui_dbg::egui_debug_system),
+        );
+        // app.add_systems(Update, (ui_system, crate::egui_dbg::egui_debug_system));
     }
 }
 
 pub fn ui_system(
-    mut window_query: Query<&Window, With<PrimaryWindow>>,
-    asset_server: Res<AssetServer>,
-    time: Res<Time>,
     mut contexts: EguiContexts,
     mut global_settings: ResMut<GlobalSettings>,
+    file_dialog: Res<FileDialogChannel>,
+    mut fps_cap: ResMut<FpsCap>,
+    mut windows: Query<&mut Window>,
+    keys: Res<ButtonInput<KeyCode>>,
+    gamepads: Query<&Gamepad>,
+    mut menu_bar_visibility: ResMut<MenuBarVisibility>,
 ) {
-    if time.elapsed_secs() >= 5.0 {
-        for window in window_query.iter_mut() {
-            let (w, h) = (window.width(), window.height());
+    for mut window in &mut windows.iter_mut() {
+        let ctx = contexts.ctx_mut().unwrap();
+        let mut style = (*ctx.style()).clone();
+        style.visuals.widgets.active.corner_radius = CornerRadius::ZERO;
+        style.visuals.widgets.hovered.corner_radius = CornerRadius::ZERO;
+        style.visuals.widgets.inactive.corner_radius = CornerRadius::ZERO;
+        style.visuals.widgets.noninteractive.corner_radius = CornerRadius::ZERO;
+        style.visuals.widgets.open.corner_radius = CornerRadius::ZERO;
+        ctx.set_style(style);
+        ctx.all_styles_mut(|style| {
+            style.visuals.widgets.active.corner_radius = CornerRadius::ZERO;
+            style.visuals.widgets.hovered.corner_radius = CornerRadius::ZERO;
+            style.visuals.widgets.inactive.corner_radius = CornerRadius::ZERO;
+            style.visuals.widgets.noninteractive.corner_radius = CornerRadius::ZERO;
+            style.visuals.widgets.open.corner_radius = CornerRadius::ZERO;
+        });
 
-            for ctx in &mut contexts.ctx_mut().into_iter() {
-                // Style
-                let mut style = (*ctx.style()).clone();
-                style.compact_menu_style = false;
-                style.visuals.widgets.noninteractive.bg_fill = egui::Color32::from_black_alpha(128);
-                style.visuals.widgets.inactive.bg_fill = egui::Color32::from_black_alpha(192);
-                style.visuals.widgets.active.bg_fill = egui::Color32::from_black_alpha(255);
-                style.visuals.widgets.hovered.bg_fill = egui::Color32::from_black_alpha(224);
-                style.visuals.window_shadow = egui::epaint::Shadow::NONE;
-                style.visuals.menu_corner_radius = CornerRadius::ZERO;
-                style.visuals.widgets.active.corner_radius = CornerRadius::ZERO;
-                style.visuals.widgets.inactive.corner_radius = CornerRadius::ZERO;
-                style.visuals.widgets.noninteractive.corner_radius = CornerRadius::ZERO;
-                style.visuals.widgets.hovered.corner_radius = CornerRadius::ZERO;
-                ctx.set_style(style.clone());
+        let maybe_gamepad = gamepads.iter().next();
 
-                egui::TopBottomPanel::top("menu-bar").show(ctx, |ui| {
-                    egui::MenuBar::new()
-                        .config(
-                            MenuConfig::new()
-                                .close_behavior(egui::PopupCloseBehavior::CloseOnClick)
-                                .style(style),
-                        )
-                        .ui(ui, |ui| {
-                            ui.menu_button("App", |ui| {
-                                if ui.button("Quit").clicked() {
-                                    std::process::exit(0);
-                                }
-                            });
-                            ui.menu_button("File", |ui| {
-                                if ui.button("Open").clicked() {
-                                    info!("TODO: Functionality.");
-                                }
-                            });
-                            ui.menu_button("Settings", |ui| {
-                                if ui.button("Toggle Debug Mode").clicked() {
-                                    global_settings.flags.toggle(GlobalFlags::DEBUG_OVERLAY);
-                                }
-                            });
-                        });
-                });
+        let f3_pressed = keys.pressed(KeyCode::AltLeft) || keys.just_pressed(KeyCode::AltRight);
+        let t_pressed = keys.pressed(KeyCode::KeyT);
+        let f3_just = keys.just_pressed(KeyCode::AltLeft) || keys.just_pressed(KeyCode::AltRight);
+        let t_just = keys.just_pressed(KeyCode::KeyT);
 
-                egui::CentralPanel::default().show(&ctx, |ui| {
-                    ui.centered_and_justified(|ui| {
-                        ui.vertical_centered(|ui| {
-                            ui.add_space(20.0);
-                            ui.heading("Welcome to RustCraft!");
-                            ui.add_space(10.0);
-                            ui.label("This is a Minecraft Bedrock Edition client written in Rust.");
-                            ui.label("Use the WASD keys to move around, and mouse to look.");
-                            ui.add_space(10.0);
-                            ui.label(
-                                "This is an early prototype with many features still missing.",
-                            );
-                            ui.label(
-                                "Expect bugs and crashes, and feel free to contribute on GitHub!",
-                            );
-                            ui.add_space(20.0);
-                        });
-                    });
-                });
-            }
+        // Combo is true if *either* key was just pressed **while** the other is already held
+        let toggle_menu_bar = (f3_just && t_pressed)        // F3 pressed last
+            || (t_just && f3_pressed)        // T pressed last
+            || maybe_gamepad
+            .map(|gp| gp.just_pressed(GamepadButton::Select))
+            .unwrap_or(false);
+
+        if toggle_menu_bar {
+            menu_bar_visibility.hidden = !menu_bar_visibility.hidden;
+            ctx.memory(|memory: &Memory| memory.clone())
+                .request_focus(Id::new("menu_bar_focus"));
         }
+
+        if !menu_bar_visibility.hidden {
+            egui::TopBottomPanel::top("menu").show(ctx, |ui| {
+                menu_bar_ui(
+                    ui,
+                    &mut global_settings,
+                    &file_dialog,
+                    &mut fps_cap,
+                    &mut window,
+                );
+            });
+        }
+
+        egui::CentralPanel::default().show(ctx, |ui| {
+            main_menu_ui(ui);
+        });
     }
 }

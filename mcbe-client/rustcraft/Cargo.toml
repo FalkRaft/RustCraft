@@ -8,14 +8,16 @@ edition = "2024"
 [dependencies]
 bevy = "0.18.0"
 bevy-egui-kbgp = "0.29.0"
+egui-desktop = "0.2.3"
 # Use bevy_egui for an immediate-mode debug overlay. We're using the git source so you can
 # pick a compatible branch if needed; you can switch this to a crates.io version later.
 bevy_egui = "0.39.0"
 bitflags = "2.10.0"
-bitvec = "1.0.1"
+crossbeam-channel = "0.5.15"
 dark-light = "2.0.0"
 egui = "0.33.3"
 log = { version = "*", features = ["max_level_debug", "release_max_level_warn"] }
+rfd = "0.17.2"
 sysinfo = "0.38.0"
 thread-priority = "3.0.0"
 
@@ -26,7 +28,7 @@ opt-level = 1
 codegen-backend = "llvm"
 rustflags = [
     # Enable WebAssembly SIMD support for better performance on supported platforms.
-    "-Ctarget-feature=simd128",
+    #    "-Ctarget-feature=+simd128",
     # (Nightly) Make the current crate share its generic instantiations
     "-Zshare-generics=y",
 ]
@@ -47,7 +49,7 @@ lto = "thin"
 codegen-backend = "llvm"
 rustflags = [
     # Enable WebAssembly SIMD support for better performance on supported platforms.
-    "-Ctarget-feature=simd128",
+    #    "-Ctarget-feature=+simd128",
     # (Nightly) Make the current crate share its generic instantiations
     "-Zshare-generics=y",
 ]
@@ -63,7 +65,7 @@ opt-level = "z"
 strip = "debuginfo"
 rustflags = [
     # Enable WebAssembly SIMD support for better performance on supported platforms.
-    "-Ctarget-feature=simd128",
+    #    "-Ctarget-feature=+simd128",
     # (Nightly) Make the current crate share its generic instantiations
     "-Zshare-generics=y",
 ]

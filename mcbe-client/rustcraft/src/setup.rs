@@ -16,9 +16,15 @@ pub fn setup(mut commands: Commands) {
     };
 
     let mut global_settings = GlobalSettings::default();
-    global_settings.flags.set(GlobalFlags::IS_DARK_MODE, theme_mode == ThemeMode::Dark);
-    global_settings.flags.set(GlobalFlags::IS_MOBILE, cfg!(target_arch = "wasm32"));
-    global_settings.flags.set(GlobalFlags::DEBUG_OVERLAY, cfg!(debug_assertions));
+    global_settings
+        .flags
+        .set(GlobalFlags::IS_DARK_MODE, theme_mode == ThemeMode::Dark);
+    global_settings
+        .flags
+        .set(GlobalFlags::IS_MOBILE, cfg!(target_arch = "wasm32"));
+    global_settings
+        .flags
+        .set(GlobalFlags::DEBUG_OVERLAY, cfg!(debug_assertions));
 
     commands.insert_resource(SysInfo {
         sys: System::new_all(),
