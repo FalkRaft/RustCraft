@@ -1,12 +1,12 @@
-use bevy::{prelude::*, window::PresentMode};
-use bevy_egui::egui;
-use bevy_egui_kbgp::KbgpEguiResponseExt;
-use egui::containers::menu::MenuConfig;
-
 use crate::{
     data::{FpsCap, FpsMode, GlobalFlags, GlobalSettings, RecentFile},
     ui::FileDialogChannel,
 };
+use bevy::{prelude::*, window::PresentMode};
+use bevy_egui::egui;
+use bevy_egui_kbgp::KbgpEguiResponseExt;
+use egui::containers::menu::MenuConfig;
+use egui::{Sense, ViewportCommand, emath};
 
 pub fn menu_bar_ui(
     ui: &mut egui::Ui,
@@ -14,10 +14,43 @@ pub fn menu_bar_ui(
     file_dialog: &FileDialogChannel,
     fps_cap: &mut FpsCap,
     window: &mut Window,
+    mut menu_bar_on: &bool,
 ) {
     egui::MenuBar::new()
         .config(MenuConfig::new().close_behavior(egui::PopupCloseBehavior::CloseOnClick))
         .ui(ui, |ui| {
+            #[cfg(target_os = "macos")]
+            ui.set_min_size(emath::Vec2::new(28.0, 28.0));
+
+            #[cfg(not(target_os = "macos"))]
+            ui.set_min_size(emath::Vec2::new(32.0, 32.0));
+
+            let title_bar_rect = ui.available_rect_before_wrap();
+            let title_bar_response = ui.interact(title_bar_rect, ui.id(), Sense::click());
+            let is_fullscreen = ui.ctx().input(|i| i.viewport().fullscreen.unwrap_or(false));
+            let mut is_maximised = ui.ctx().input(|i| i.viewport().maximized.unwrap_or(false));
+
+            if title_bar_response.double_clicked() {
+                is_maximised = ui.ctx().input(|i| i.viewport().maximized.unwrap_or(false));
+                ui.ctx()
+                    .send_viewport_cmd(ViewportCommand::Maximized(!is_maximised));
+            }
+
+            debug!("is_fullscreen: {}", is_fullscreen);
+
+            if !is_fullscreen || !is_maximised {
+                #[cfg(target_os = "macos")]
+                {
+                    if global_settings.flags.contains(GlobalFlags::DEBUG_OVERLAY) {
+                        ui.add_space(28.0 * 17.0);
+                    } else {
+                        ui.add_space(28.0 * 5.5);
+                    }
+                }
+
+                menu_bar_on = &false;
+            }
+
             ui.menu_button("App", |ui| {
                 if ui.button("Quit").kbgp_initial_focus().clicked() {
                     std::process::exit(0);

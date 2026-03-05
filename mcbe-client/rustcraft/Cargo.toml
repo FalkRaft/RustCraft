@@ -8,7 +8,6 @@ edition = "2024"
 [dependencies]
 bevy = "0.18.0"
 bevy-egui-kbgp = "0.29.0"
-egui-desktop = "0.2.3"
 # Use bevy_egui for an immediate-mode debug overlay. We're using the git source so you can
 # pick a compatible branch if needed; you can switch this to a crates.io version later.
 bevy_egui = "0.39.0"

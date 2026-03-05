@@ -1,5 +1,5 @@
 [package]
-name = "bedrock-engine-server"
+name = "anticheat"
 version = "0.0.1"
 edition = "2024"
 rust-version = "1.93.0"
@@ -8,7 +8,6 @@ rust-version = "1.93.0"
 crate-type = ["cdylib"]
 
 [dependencies]
-quickjs-rs = "0.5.2"
 # This is the base crate with most high-level type definitions
 pumpkin = { git = "https://github.com/Pumpkin-MC/Pumpkin.git", branch = "master", package = "pumpkin" }
 # Other utilities used by Pumpkin (e.g. TextComponent, Vectors...)

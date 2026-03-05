@@ -2,6 +2,10 @@ use bevy::input::ButtonInput;
 use bevy::window::{MonitorSelection, PresentMode, VideoModeSelection};
 use bevy::{prelude::*, window::WindowMode};
 use log::info;
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
 
 use crate::data::{DebugFlags, FpsCap, FpsMode, GlobalFlags, GlobalSettings};
 
@@ -15,6 +19,7 @@ pub fn input_system(
     keys: Res<ButtonInput<KeyCode>>,
     mut cap: ResMut<FpsCap>,
     mut global_settings: ResMut<GlobalSettings>,
+    time: Res<Time>,
 ) {
     // assume single primary window
     if let Ok(mut window) = windows.single_mut() {
@@ -30,6 +35,8 @@ pub fn input_system(
         if keys.just_released(KeyCode::F3)
             && !keys.pressed(KeyCode::KeyT)
             && !keys.just_pressed(KeyCode::KeyT)
+            && !keys.pressed(KeyCode::ControlLeft)
+            && !keys.just_pressed(KeyCode::ControlLeft)
         {
             global_settings.flags.toggle(GlobalFlags::DEBUG_OVERLAY);
             info!(
@@ -38,19 +45,35 @@ pub fn input_system(
             );
         }
 
-        if keys.all_pressed([KeyCode::F3, KeyCode::ControlLeft]) {
-            warn!(
-                "CRASH TEST: {:?} + {:?} pressed, crashing in 10 seconds...",
-                KeyCode::F3,
-                KeyCode::ControlLeft
-            );
-            std::thread::sleep(std::time::Duration::from_secs(1));
-            for i in 0..10 {
-                warn!("CRASH TEST: Crashing in {}s", 10 - i);
+        let crash_started = Arc::new(AtomicBool::new(false));
+
+        if keys.all_pressed([KeyCode::F3, KeyCode::ControlLeft])
+            && !crash_started.swap(true, Ordering::SeqCst)
+        {
+            // let flag = crash_started.clone();
+
+            std::thread::spawn(move || {
+                warn!(
+                    "CRASH TEST: {:?} + {:?} pressed, crashing in 10 seconds...",
+                    KeyCode::F3,
+                    KeyCode::ControlLeft
+                );
+
                 std::thread::sleep(std::time::Duration::from_secs(1));
-            }
-            std::process::abort();
+
+                for i in 0..10 {
+                    warn!("CRASH TEST: Crashing in {}s", 10 - i);
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                }
+
+                std::process::abort();
+
+                // (never reached, but if you had cleanup logic)
+                // flag.store(false, Ordering::SeqCst);
+            });
         }
+
+        if keys.all_just_released([KeyCode::F3, KeyCode::ControlLeft]) {}
 
         if keys.all_pressed([KeyCode::ControlLeft, KeyCode::KeyQ]) {
             std::process::exit(0);

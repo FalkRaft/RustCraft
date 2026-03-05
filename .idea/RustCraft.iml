@@ -17,6 +17,8 @@
       <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-world/benches" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-world/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-client/plugins/bedrock-engine-server/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/mcbe-client/plugins/anticheat/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-client/rustcraft/target" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/plugins/bedrock-engine-server/target" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/pumpkin-codegen/target" />
@@ -32,6 +34,7 @@
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/playerdata" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/poi" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/region" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-client/plugins/anticheat/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::window::PrimaryWindow;
 use bevy_egui::{EguiContexts, EguiPrimaryContextPass};
 use crossbeam_channel::{Receiver, Sender};
 use egui::{CornerRadius, Id, Memory};
@@ -42,26 +43,24 @@ pub fn ui_system(
     mut global_settings: ResMut<GlobalSettings>,
     file_dialog: Res<FileDialogChannel>,
     mut fps_cap: ResMut<FpsCap>,
-    mut windows: Query<&mut Window>,
+    mut windows: Query<&mut Window, With<PrimaryWindow>>,
     keys: Res<ButtonInput<KeyCode>>,
     gamepads: Query<&Gamepad>,
     mut menu_bar_visibility: ResMut<MenuBarVisibility>,
 ) {
-    for mut window in &mut windows.iter_mut() {
-        let ctx = contexts.ctx_mut().unwrap();
-        let mut style = (*ctx.style()).clone();
-        style.visuals.widgets.active.corner_radius = CornerRadius::ZERO;
-        style.visuals.widgets.hovered.corner_radius = CornerRadius::ZERO;
-        style.visuals.widgets.inactive.corner_radius = CornerRadius::ZERO;
-        style.visuals.widgets.noninteractive.corner_radius = CornerRadius::ZERO;
-        style.visuals.widgets.open.corner_radius = CornerRadius::ZERO;
-        ctx.set_style(style);
+    if let Ok(mut window) = windows.single_mut()
+        && let Ok(ctx) = contexts.ctx_mut()
+    {
         ctx.all_styles_mut(|style| {
+            style.visuals.window_corner_radius = CornerRadius::ZERO;
+            style.visuals.menu_corner_radius = CornerRadius::ZERO;
             style.visuals.widgets.active.corner_radius = CornerRadius::ZERO;
             style.visuals.widgets.hovered.corner_radius = CornerRadius::ZERO;
             style.visuals.widgets.inactive.corner_radius = CornerRadius::ZERO;
             style.visuals.widgets.noninteractive.corner_radius = CornerRadius::ZERO;
             style.visuals.widgets.open.corner_radius = CornerRadius::ZERO;
+            style.compact_menu_style = true;
+            style.visuals.resize_corner_size = 0.0;
         });
 
         let maybe_gamepad = gamepads.iter().next();
@@ -92,6 +91,7 @@ pub fn ui_system(
                     &file_dialog,
                     &mut fps_cap,
                     &mut window,
+                    &toggle_menu_bar,
                 );
             });
         }

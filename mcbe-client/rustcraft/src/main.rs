@@ -7,7 +7,6 @@ use bevy::{
 };
 use bevy_egui::EguiPlugin;
 use bevy_egui_kbgp::KbgpPlugin;
-use std::f32;
 
 mod data;
 mod egui_dbg;
@@ -62,16 +61,15 @@ fn main() {
                     max_height: f32::INFINITY,
                 },
                 resizable: true,
-                fullsize_content_view: false,
+                fullsize_content_view: true,
                 titlebar_shown: true,
                 titlebar_show_title: true,
                 titlebar_show_buttons: true,
-                titlebar_transparent: false,
+                titlebar_transparent: true,
                 transparent: false,
                 composite_alpha_mode: CompositeAlphaMode::PostMultiplied,
                 ..Default::default()
             }),
-            ..Default::default()
         }))
         // add egui overlay
         // .add_plugins(EguiPlugin {
@@ -81,7 +79,7 @@ fn main() {
         // })
         .add_plugins(EguiPlugin::default())
         .add_plugins(KbgpPlugin)
-        .add_plugins(BevyWindowPlugin::default())
+        .add_plugins(BevyWindowPlugin)
         .add_plugins(GameUIPlugin)
         // startup
         .add_systems(PreStartup, setup)

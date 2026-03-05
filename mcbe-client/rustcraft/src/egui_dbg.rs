@@ -26,15 +26,21 @@ pub fn egui_debug_system(
     for ctx in &mut contexts.ctx_mut().into_iter() {
         // Create a floating, anchored window in the top-left corner
         egui::Window::new("RustCraft Debug")
-            .anchor(egui::Align2::LEFT_TOP, egui::vec2(0.0, 22.0))
-            .resizable(false)
-            .frame(
-                egui::Frame::NONE
-                    .fill(Color32::from_black_alpha(192))
-                    .into(),
+            .anchor(
+                egui::Align2::LEFT_TOP,
+                egui::vec2(
+                    0.0,
+                    if cfg!(target_os = "macos") {
+                        32.0
+                    } else {
+                        36.0
+                    },
+                ),
             )
+            .resizable(false)
+            .frame(egui::Frame::NONE.fill(Color32::from_black_alpha(192)))
             .interactable(true)
-            .show(&ctx, |ui| {
+            .show(ctx, |ui| {
                 for mut window in &mut windows.iter_mut() {
                     let (w, h) = (
                         window.resolution.width() as u32,
