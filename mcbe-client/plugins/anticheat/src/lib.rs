@@ -1,15 +1,15 @@
 use pumpkin_api_macros::plugin_impl;
 
 #[plugin_impl]
-pub struct MyPlugin {}
+pub struct AnticheatPlugin {}
 
-impl MyPlugin {
+impl AnticheatPlugin {
     pub fn new() -> Self {
-        MyPlugin {}
+        AnticheatPlugin {}
     }
 }
 
-impl Default for MyPlugin {
+impl Default for AnticheatPlugin {
     fn default() -> Self {
         Self::new()
     }

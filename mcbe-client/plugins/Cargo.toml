@@ -1,0 +1,6 @@
+[workspace]
+members = ["anticheat", "bedrock-engine-server"]
+resolver = "3"
+
+[profile.release]
+lto = true

@@ -1,3 +1,4 @@
+use bevy::ecs::system::SystemParam;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
 use bevy_egui::{EguiContexts, EguiPrimaryContextPass};
@@ -34,20 +35,31 @@ impl Plugin for GameUIPlugin {
             EguiPrimaryContextPass,
             (ui_system, crate::egui_dbg::egui_debug_system),
         );
-        // app.add_systems(Update, (ui_system, crate::egui_dbg::egui_debug_system));
     }
+}
+
+#[derive(SystemParam)]
+pub struct UiResBundle<'w> {
+    pub global_settings: ResMut<'w, GlobalSettings>,
+    pub file_dialog: Res<'w, FileDialogChannel>,
+    pub fps_cap: ResMut<'w, FpsCap>,
+    pub menu_bar_visibility: ResMut<'w, MenuBarVisibility>,
 }
 
 pub fn ui_system(
     mut contexts: EguiContexts,
-    mut global_settings: ResMut<GlobalSettings>,
-    file_dialog: Res<FileDialogChannel>,
-    mut fps_cap: ResMut<FpsCap>,
     mut windows: Query<&mut Window, With<PrimaryWindow>>,
     keys: Res<ButtonInput<KeyCode>>,
     gamepads: Query<&Gamepad>,
-    mut menu_bar_visibility: ResMut<MenuBarVisibility>,
+    ui: UiResBundle,
 ) {
+    let UiResBundle {
+        mut global_settings,
+        file_dialog,
+        mut fps_cap,
+        mut menu_bar_visibility,
+    } = ui;
+
     if let Ok(mut window) = windows.single_mut()
         && let Ok(ctx) = contexts.ctx_mut()
     {
@@ -70,12 +82,11 @@ pub fn ui_system(
         let f3_just = keys.just_pressed(KeyCode::AltLeft) || keys.just_pressed(KeyCode::AltRight);
         let t_just = keys.just_pressed(KeyCode::KeyT);
 
-        // Combo is true if *either* key was just pressed **while** the other is already held
-        let toggle_menu_bar = (f3_just && t_pressed)        // F3 pressed last
-            || (t_just && f3_pressed)        // T pressed last
+        let toggle_menu_bar = (f3_just && t_pressed)
+            || (t_just && f3_pressed)
             || maybe_gamepad
-            .map(|gp| gp.just_pressed(GamepadButton::Select))
-            .unwrap_or(false);
+                .map(|gp| gp.just_pressed(GamepadButton::Select))
+                .unwrap_or(false);
 
         if toggle_menu_bar {
             menu_bar_visibility.hidden = !menu_bar_visibility.hidden;
@@ -84,9 +95,9 @@ pub fn ui_system(
         }
 
         if !menu_bar_visibility.hidden {
-            egui::TopBottomPanel::top("menu").show(ctx, |ui| {
+            egui::TopBottomPanel::top("menu").show(ctx, |ui_egui| {
                 menu_bar_ui(
-                    ui,
+                    ui_egui,
                     &mut global_settings,
                     &file_dialog,
                     &mut fps_cap,
@@ -96,8 +107,8 @@ pub fn ui_system(
             });
         }
 
-        egui::CentralPanel::default().show(ctx, |ui| {
-            main_menu_ui(ui);
+        egui::CentralPanel::default().show(ctx, |ui_egui| {
+            main_menu_ui(ui_egui);
         });
     }
 }

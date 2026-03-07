@@ -35,6 +35,8 @@
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/poi" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-server/Pumpkin/world/region" />
       <excludeFolder url="file://$MODULE_DIR$/mcbe-client/plugins/anticheat/target" />
+      <excludeFolder url="file://$MODULE_DIR$/mcbe-client/plugins/target" />
+      <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

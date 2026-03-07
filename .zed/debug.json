@@ -1,0 +1,18 @@
+// Project-local debug tasks
+//
+// For more documentation on how to configure debug tasks,
+// see: https://zed.dev/docs/debugger
+[
+  {
+    "build": {
+      "command": "cargo build",
+      "args": [
+        "$cwd"
+      ]
+    },
+    "adapter": "CodeLLDB",
+    "label": "Cargo Build Debug",
+    "pid": 0,
+    "program": "/Applications/Terminal.app"
+  }
+]

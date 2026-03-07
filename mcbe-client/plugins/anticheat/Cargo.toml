@@ -21,6 +21,3 @@ log = "0.4"
 
 [profile.release]
 lto = true
-
-[toolchain]
-channel = "nightly"

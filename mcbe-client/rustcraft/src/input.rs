@@ -19,7 +19,7 @@ pub fn input_system(
     keys: Res<ButtonInput<KeyCode>>,
     mut cap: ResMut<FpsCap>,
     mut global_settings: ResMut<GlobalSettings>,
-    time: Res<Time>,
+    _time: Res<Time>,
 ) {
     // assume single primary window
     if let Ok(mut window) = windows.single_mut() {
@@ -73,8 +73,6 @@ pub fn input_system(
             });
         }
 
-        if keys.all_just_released([KeyCode::F3, KeyCode::ControlLeft]) {}
-
         if keys.all_pressed([KeyCode::ControlLeft, KeyCode::KeyQ]) {
             std::process::exit(0);
         }
@@ -104,10 +102,7 @@ pub fn input_system(
                 PresentMode::Mailbox,
             ];
             let current = window.present_mode;
-            let idx = modes
-                .iter()
-                .position(|m| m == &current)
-                .unwrap_or_else(|| 0);
+            let idx = modes.iter().position(|m| m == &current).unwrap_or(0);
             let next = modes[(idx + 1) % modes.len()];
             window.present_mode = next;
             info!("Changed present mode to {:?}", next);

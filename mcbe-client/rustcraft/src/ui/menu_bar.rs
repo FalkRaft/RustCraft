@@ -75,8 +75,7 @@ pub fn menu_bar_ui(
                     ))
                     .kbgp_initial_focus()
                     .labelled_by(ui.label("FPS Cap").id);
-                    fps_cap.mode =
-                        FpsMode::Manual(global_settings.game_settings.fps_cap as u32 * 10);
+                    fps_cap.mode = FpsMode::Manual(global_settings.game_settings.fps_cap as u32);
                     fps_cap_ui(global_settings, ui, window);
                 });
             });

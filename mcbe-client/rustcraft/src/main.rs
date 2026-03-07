@@ -1,4 +1,3 @@
-#![feature(default_field_values)]
 #![recursion_limit = "256"]
 
 use bevy::{

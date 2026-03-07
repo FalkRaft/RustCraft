@@ -69,7 +69,7 @@ pub fn egui_debug_system(
                         let files = process.open_files();
                         let session = process.session_id();
                         let runtime = process.run_time();
-                        ui.label(egui::RichText::new(format!("Process Usage")).strong());
+                        ui.label(egui::RichText::new("Process Usage").strong());
                         if global_settings.dbg_flags.contains(DebugFlags::CPU) {
                             ui.label(format!("CPU: {:?}%", cpu));
                         }
@@ -100,13 +100,13 @@ pub fn egui_debug_system(
                         ui.separator();
                     }
 
-                    ui.label(egui::RichText::new(format!("Window Info")).strong());
+                    ui.label(egui::RichText::new("Window Info").strong());
                     ui.label(format!("Present mode: {:?}", window.present_mode));
                     ui.label(format!("FPS cap: {:?}", cap.mode));
                     ui.label(format!("Delta time: {:.3} s", time.delta_secs()));
                     ui.label(format!("Uptime: {:.3}s", time.elapsed_secs_wrapped_f64()));
                     ui.separator();
-                    ui.label(egui::RichText::new(format!("Settings")).strong());
+                    ui.label(egui::RichText::new("Settings").strong());
                     // For each flag:
                     // 1. Copy the current value into a local bool
                     // 2. Pass that bool to the checkbox

@@ -38,6 +38,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "anticheat"
+version = "0.1.0"
+dependencies = [
+    "log",
+    "pumpkin",
+    "pumpkin-api-macros",
+    "pumpkin-util",
+    "tokio",
+]
+
+[[package]]
 name = "anyhow"
 version = "1.0.102"
 source = "registry+https://github.com/rust-lang/crates.io-index"

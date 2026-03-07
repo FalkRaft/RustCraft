@@ -32,8 +32,6 @@ bitflags! {
 #[derive(Resource)]
 pub struct GlobalSettings {
     pub flags: GlobalFlags,
-    pub button_width_multiplier: f32,
-    pub button_height_multiplier: f32,
     pub dbg_flags: DebugFlags,
     pub recent_files_opened: Vec<RecentFile>,
     pub game_settings: GameSettings,
@@ -43,8 +41,8 @@ impl Default for GlobalSettings {
     fn default() -> Self {
         Self {
             flags: GlobalFlags::empty(),
-            button_width_multiplier: 1.0 / 20.0,
-            button_height_multiplier: 1.0 / 30.0,
+            // button_width_multiplier: 1.0 / 20.0,
+            // button_height_multiplier: 1.0 / 30.0,
             dbg_flags: DebugFlags::empty(),
             recent_files_opened: vec![],
             game_settings: GameSettings {

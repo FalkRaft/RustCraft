@@ -1,12 +1,11 @@
 use bevy::prelude::*;
-use dark_light;
 use sysinfo::System;
 
 use crate::data::{GlobalFlags, GlobalSettings, SysInfo, SystemThemeState, ThemeMode};
 
 pub fn setup(mut commands: Commands) {
     // spawn a simple 2D camera
-    commands.spawn(Camera2d::default());
+    commands.spawn(Camera2d);
 
     let system_theme = dark_light::detect();
     let theme_mode = match system_theme {
