@@ -1,14 +1,12 @@
 [package]
-name = "bedrock-engine-server"
-version = "0.0.1"
+name = "anticheat"
+version = "0.1.0"
 edition = "2024"
-rust-version = "1.93.0"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-quickjs-rs = "0.5.2"
 # This is the base crate with most high-level type definitions
 pumpkin = { git = "https://github.com/Pumpkin-MC/Pumpkin.git", branch = "master" }
 # Other utilities used by Pumpkin (e.g. TextComponent, Vectors...)
@@ -21,8 +19,8 @@ tokio = "1.48"
 # Logging
 log = "0.4"
 
-#[lints]
-#workspace = true
-
 [profile.release]
 lto = true
+
+[toolchain]
+channel = "nightly"
