@@ -1,9 +1,9 @@
 name: Daily Multi-Platform Build
 
-on:
-  schedule:
-    - cron: "0 3 * * *"
-  workflow_dispatch:
+# on:
+#   schedule:
+#     - cron: "0 3 * * *"
+#   workflow_dispatch:
 
 jobs:
   build:
